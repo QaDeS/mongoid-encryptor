@@ -8,6 +8,15 @@ module Mongoid #:nodoc:
     extend ActiveSupport::Concern
 
     module ClassMethods #:nodoc:
+      # @param [Hash] opts
+      def encrypted(*args)
+        opts = args.extract_options!
+        defined_attrs = fields.keys
+        yield if block_given?
+        attrs = (fields.keys - defined_attrs + args).uniq
+        encrypts(*attrs, opts)
+      end
+
       # @param [Hash] attrs
       def encrypts(*attrs)
         base_options = attrs.last.is_a?(Hash) ? attrs.pop : {}
@@ -37,7 +46,7 @@ module Mongoid #:nodoc:
       # @param [String] key
       # @return [Object]
       def read_attribute_for_validation(key)
-        v = read_attribute(key)
+        v = read_attribute(key) || instance_variable_get("@#{key}")
         v.try(:encrypted?) ? v.decrypt : v
       end
 
@@ -74,7 +83,11 @@ module Mongoid #:nodoc:
       # @param [Hash] options
       # @return [EncryptedStrings::Cipher]
       def instantiate_cipher(cipher_class, options)
-        cipher_class.new(options.dup)
+        opts = options.dup
+        opts.each_pair do |k, v|
+          opts[k] = v.bind(self) if v.is_a?(Proc)
+        end
+        cipher_class.new(opts)
       end
     end
   end
