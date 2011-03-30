@@ -47,7 +47,7 @@ module Mongoid #:nodoc:
       # @return [Object]
       def read_attribute_for_validation(key)
         v = read_attribute(key) || instance_variable_get("@#{key}")
-        v.try(:encrypted?) ? v.decrypt : v
+        v.try(:can_decrypt?) ? v.decrypt : v
       end
 
       private

@@ -1,0 +1,5 @@
+build=Build mongoid-encryptor-0.0.4.gem into the pkg directory
+default=
+install=Build and install mongoid-encryptor-0.0.4.gem into system gems
+release=Create tag v0.0.4 and build and push mongoid-encryptor-0.0.4.gem to Rubygems
+spec=Run all specs in spec directory
