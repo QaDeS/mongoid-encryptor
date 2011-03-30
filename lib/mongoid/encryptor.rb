@@ -14,7 +14,8 @@ module Mongoid #:nodoc:
         defined_attrs = fields.keys
         yield if block_given?
         attrs = (fields.keys - defined_attrs + args).uniq
-        encrypts(*attrs, opts)
+        attrs.push opts
+        encrypts(*attrs)
       end
 
       # @param [Hash] attrs
