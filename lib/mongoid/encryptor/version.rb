@@ -2,6 +2,6 @@
 
 module Mongoid #:nodoc:
   module Encryptor
-    VERSION = '0.0.4'
+    VERSION = '0.0.4.alpha.1'
   end
 end
