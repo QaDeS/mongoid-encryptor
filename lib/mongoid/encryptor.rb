@@ -14,7 +14,7 @@ module Mongoid #:nodoc:
         defined_attrs = fields.keys
         yield if block_given?
         attrs = (fields.keys - defined_attrs + args).uniq
-        attrs.push opts
+        attrs << opts
         encrypts(*attrs)
       end
 
@@ -48,7 +48,7 @@ module Mongoid #:nodoc:
       # @return [Object]
       def read_attribute_for_validation(key)
         v = read_attribute(key) || instance_variable_get("@#{key}")
-        v.try(:can_decrypt?) ? v.decrypt : v
+        (v.respond_to?(:can_decrypt?) && v.can_decrypt?) ? v.decrypt : v
       end
 
       private
